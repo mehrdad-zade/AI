@@ -53,20 +53,24 @@ class RedditData:
             # append relevant data to dataframe
             tmp_df = pd.DataFrame(
                 {
+                    'subreddit_id': post['data']['subreddit_id'],
                     'subreddit': post['data']['subreddit'],
+                    'subreddit_subscribers': post['data']['subreddit_subscribers'],
+                    'id': post['data']['id'],
                     'title': post['data']['title'],
                     #'selftext': post['data']['selftext'],
-                    'upvote_ratio': post['data']['upvote_ratio'],
                     'ups': post['data']['ups'],
                     'downs': post['data']['downs'],
-                    'score': post['data']['score']
+                    'score': post['data']['score'],
+                    'likes': post['data']['likes'],
+                    'num_comments': post['data']['num_comments']
                 }, index=[i + 1]
             )
             i += 1
             df = pd.concat([df, tmp_df])
         return df.head(self.NUMBER_OF_RETURNED_ROWS)
 
-    def getRes(self, reqType):
+    def getRes(self, search, subReddit):
         """
         :param reqType:
             'r/python/hot'
@@ -75,12 +79,13 @@ class RedditData:
             'r/python/top'
 
         :return:
+            IPython.displays
         """
         headers = self.authenticate()
         # while the token is valid (~2 hours) we just add headers=headers to our requests
-        api = 'https://oauth.reddit.com/' + reqType
+        api = 'https://oauth.reddit.com/r/' + search + '/' + subReddit
         res = requests.get(api, headers=headers, params={'limit': self.LIMIT_RESPONSE_COUNT})
         display(self.prettifyRes(res).to_string())
 
 
-RedditData().getRes(reqType='r/python/top')
+RedditData().getRes(search='msft', subReddit='top')
