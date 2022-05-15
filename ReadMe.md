@@ -1,0 +1,1 @@
+this programs collects data about a company that you input and returns sentiment analysis
