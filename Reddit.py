@@ -19,7 +19,7 @@ class Reddit:
                              user_agent=Secrets.REDDIT_USERNAME)
         return reddit
 
-    def extract(self, voteType, printExtract=False):
+    def extract(self, printExtract, voteType):
         df = pd.DataFrame()  # initialize dataframe
         # loop through each post retrieved from GET request
         i = 0
@@ -51,9 +51,9 @@ class Reddit:
                 df = pd.concat([df, tmp_df])
         if printExtract:
             print(tabulate(df, showindex=False, headers=df.columns))
-        return data
+        return data # can also return df for further analysis on the extracted and categorized data
 
-    def getSubredditComments(self, search):
+    def getSubredditComments(self, search, printExtract=False):
         reddit = self.authenticate()
         subreddit = reddit.subreddit(search)
         # sub reddit type
@@ -62,7 +62,7 @@ class Reddit:
         rising = subreddit.rising(limit=5)
         new = subreddit.new(limit=5)
 
-        return self.extract(voteType=top, printExtract=False)
+        return self.extract(printExtract, voteType=top)
 
 
 #Reddit().getSubredditComments('tesla')
