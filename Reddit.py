@@ -19,33 +19,39 @@ class Reddit:
                              user_agent=Secrets.REDDIT_USERNAME)
         return reddit
 
-    def extract(self, voteType):
+    def extract(self, voteType, printExtract=False):
         df = pd.DataFrame()  # initialize dataframe
         # loop through each post retrieved from GET request
         i = 0
+        data = ""
         for submission in voteType:
+            data += submission.title + '. '
             submission.comment_sort = 'top'
             submission.comment_limit = 5
             submission.comments.replace_more(limit=0)  # remove MoreComments
             comments = ""
             for comment in submission.comments:
                 comments += comment.body
-            # append relevant data to dataframe
-            tmp_df = pd.DataFrame(
-                {
-                    'subreddit_id': submission.id,
-                    'title': submission.title,
-                    'ups': submission.ups,
-                    'downs': submission.downs,
-                    'score': submission.score,
-                    'likes': submission.likes,
-                    'num_comments': submission.num_comments,
-                    'comments': comments
-                }, index=[i + 1]
-            )
-            i += 1
-            df = pd.concat([df, tmp_df])
-        print(tabulate(df, showindex=False, headers=df.columns))
+                data += comment.body + '. '
+            if printExtract == True:
+                # append relevant data to dataframe
+                tmp_df = pd.DataFrame(
+                    {
+                        'subreddit_id': submission.id,
+                        'title': submission.title,
+                        'ups': submission.ups,
+                        'downs': submission.downs,
+                        'score': submission.score,
+                        'likes': submission.likes,
+                        'num_comments': submission.num_comments,
+                        'comments': comments
+                    }, index=[i + 1]
+                )
+                i += 1
+                df = pd.concat([df, tmp_df])
+        if printExtract:
+            print(tabulate(df, showindex=False, headers=df.columns))
+        return data
 
     def getSubredditComments(self, search):
         reddit = self.authenticate()
@@ -55,7 +61,8 @@ class Reddit:
         top = subreddit.top(limit=5)
         rising = subreddit.rising(limit=5)
         new = subreddit.new(limit=5)
-        self.extract(voteType=top)
+
+        return self.extract(voteType=top, printExtract=False)
 
 
-Reddit().getSubredditComments('tesla')
+#Reddit().getSubredditComments('tesla')
