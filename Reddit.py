@@ -33,7 +33,7 @@ class Reddit:
             for comment in submission.comments:
                 comments += comment.body
                 data += comment.body + '. '
-            if printExtract == True:
+            if printExtract:
                 # append relevant data to dataframe
                 tmp_df = pd.DataFrame(
                     {
@@ -51,9 +51,9 @@ class Reddit:
                 df = pd.concat([df, tmp_df])
         if printExtract:
             print(tabulate(df, showindex=False, headers=df.columns))
-        return data # can also return df for further analysis on the extracted and categorized data
+        return data  # can also return df for further analysis on the extracted and categorized data
 
-    def getSubredditComments(self, search, printExtract=False):
+    def getSubredditComments(self, search, printExtract):
         reddit = self.authenticate()
         subreddit = reddit.subreddit(search)
         # sub reddit type
@@ -64,5 +64,4 @@ class Reddit:
 
         return self.extract(printExtract, voteType=top)
 
-
-#Reddit().getSubredditComments('tesla')
+# Reddit().getSubredditComments('tesla')
