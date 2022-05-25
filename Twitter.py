@@ -104,16 +104,16 @@ class TwitterClient:
         tweets = api.get_tweets(query=query, count=200)
         # picking positive tweets from tweets
         ptweets = [tweet for tweet in tweets if tweet['sentiment'] == 'positive']
-        print('--------Twitter Sentiments--------')
-        # percentage of positive tweets
-        print("Positive: {} %".format(100 * len(ptweets) / len(tweets)))
+        #print('--------Twitter Sentiments--------')
         # picking negative tweets from tweets
         ntweets = [tweet for tweet in tweets if tweet['sentiment'] == 'negative']
-        # percentage of negative tweets
-        print("Negative: {} %".format(100 * len(ntweets) / len(tweets)))
         # percentage of neutral tweets
-        print("Neutral: {} % \
-            ".format(100 * (len(tweets) - (len(ntweets) + len(ptweets))) / len(tweets)))
+        print("0    {} % ".format(100 * (len(tweets) - (len(ntweets) + len(ptweets))) / len(tweets)))
+        # percentage of positive tweets
+        print("1    {} %".format(100 * len(ptweets) / len(tweets)))
+        # percentage of negative tweets
+        print("-1    {} %".format(100 * len(ntweets) / len(tweets)))
+
 
         if print_data:
             # printing first 5 positive tweets

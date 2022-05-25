@@ -13,12 +13,16 @@ import lxml.html
 
 class YahooFinance:
 
+    def __init__(self, ticker):
+        self.yahoo_data = ""
+        self.ticker = ticker
+
     def getTickerInfo(self, ticker):
         ticker = yahooFinance.Ticker(ticker)
         print(self.string2soup(ticker.info))
 
-    def getNewsHeadlines(self, ticker):
-        url = 'https://finance.yahoo.com/quote/' + ticker
+    def getNewsHeadlines(self, print_extracted_data):
+        url = 'https://finance.yahoo.com/quote/' + self.ticker
         response = requests.get(url)
         if not response.ok:
             print('Status code:', response.status_code)
@@ -26,13 +30,17 @@ class YahooFinance:
         # print(self.html2soup(response.text))
         soup = self.getSoup(response.text)
         # print(soup.title)
-        div_tags_news_section = soup.find_all('div', {'id': "quoteNewsStream-0-Stream"})
-        for div in div_tags_news_section:
-            links = div.findAll('a')
-            for a in links:
-                #print(url + a['href'])
-                if ticker in a.contents[1]:
-                    print(a.contents[1])
+        div_tag_news_section = soup.find_all('div', {'id': "quoteNewsStream-0-Stream"})
+        links = div_tag_news_section[0].findAll('a')
+        for title in links:
+            if print_extracted_data:
+                print(title.text) # prints news titles
+                print(url + title['href']) # prints all the links
+            self.yahoo_data += title.text + '. '
+
+    def getYahooData(self):
+        return self.yahoo_data
+
 
     def html2soup(self, html):
         return beautifulSoup.BeautifulSoup(html, features="lxml").prettify()
@@ -43,6 +51,8 @@ class YahooFinance:
     def getSoup(self, html):
         return beautifulSoup.BeautifulSoup(html, 'html.parser')
 
-
-# YahooFinance().getTickerInfo('FB')
-YahooFinance().getNewsHeadlines('AAPL')
+"""
+yf = YahooFinance('AAPL')
+yf.getNewsHeadlines()
+yf.getYahooData()
+"""

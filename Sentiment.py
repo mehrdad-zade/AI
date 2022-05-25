@@ -64,7 +64,7 @@ class Sentiment:
         fig = plotly.express.bar(pos_freq_df, x= 'Bar Graph of Frequent Words', y='Count', title='Commonly Used Positive Words By Count')
         fig.show()
 
-    def analysis_method_1(self, query, print_data):
+    def analysis_method_1(self, data):
         """
         this method gathers 5 sub-reddits and their top 5 comments and put them all in one string.
         the string is cleaned through emoji removal, tokenizing, stopword removal and lemmatizing.
@@ -72,12 +72,5 @@ class Sentiment:
          pos/neg/neu based on the polarity score of the words.
          if we are interested in building wordCloud or bar charts, they are available too.
         """
-        print('--------Reddit Sentiments--------')
-        redditData_cleaned = DataCleansing(Reddit().getSubredditComments(search=query, printExtract=print_data)).getClean()
-        df = Sentiment().polarity_score_of_words(redditData_cleaned)
-        #Sentiment().display_word_cloud(df)
-        #Sentiment().display_bar_chart(df)
-        #print('Done.')
+        df = Sentiment().polarity_score_of_words(data)
 
-
-#Sentiment().analysis_method_1('trump')
