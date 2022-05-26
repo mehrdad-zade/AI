@@ -17,9 +17,9 @@ class YahooFinance:
         self.yahoo_data = ""
         self.ticker = ticker
 
-    def getTickerInfo(self, ticker):
-        ticker = yahooFinance.Ticker(ticker)
-        print(self.string2soup(ticker.info))
+    def getTickerInfo(self):
+        ticker = yahooFinance.Ticker(self.ticker)
+        print(self.string2soup(self.ticker.info))
 
     def getNewsHeadlines(self, print_extracted_data):
         url = 'https://finance.yahoo.com/quote/' + self.ticker
